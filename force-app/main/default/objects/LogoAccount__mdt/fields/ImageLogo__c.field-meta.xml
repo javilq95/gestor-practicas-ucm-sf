@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>ImageLogo__c</fullName>
+    <description>Imagen del logo de la empresa autorizada</description>
+    <externalId>false</externalId>
+    <fieldManageability>DeveloperControlled</fieldManageability>
+    <label>Imagen Logo</label>
+    <required>true</required>
+    <type>TextArea</type>
+</CustomField>

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>52.0</apiVersion>
+    <decisions>
+        <description>La oferta ya existe</description>
+        <name>Duplicate</name>
+        <label>Duplicado</label>
+        <locationX>321</locationX>
+        <locationY>356</locationY>
+        <defaultConnectorLabel>Resultado predeterminado</defaultConnectorLabel>
+        <rules>
+            <name>isDuplicate</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>Duplicado</leftValueReference>
+                <operator>NotEqualTo</operator>
+                <rightValue>
+                    <stringValue>Null</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>DeleteOpportunityLead</targetReference>
+            </connector>
+            <label>estaDuplicado</label>
+        </rules>
+    </decisions>
+    <description>Las ofertas duplicadas serán eliminadas automaticamente</description>
+    <interviewLabel>Eliminar Ofertas Duplicadas {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Eliminar Ofertas Duplicadas</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>FREE_FORM_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordDeletes>
+        <description>La oferta duplicada se elimina</description>
+        <name>DeleteOpportunityLead</name>
+        <label>Oferta eliminada</label>
+        <locationX>526</locationX>
+        <locationY>357</locationY>
+        <inputReference>$Record</inputReference>
+    </recordDeletes>
+    <recordLookups>
+        <description>Obtiene un objeto duplicado si lo hubiera</description>
+        <name>GetDuplicated</name>
+        <label>Obtener duplicado</label>
+        <locationX>171</locationX>
+        <locationY>354</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>Duplicate</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Lead__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Lead__r.Id</elementReference>
+            </value>
+        </filters>
+        <filters>
+            <field>Opportunity__c</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.Opportunity__r.Id</elementReference>
+            </value>
+        </filters>
+        <object>OpportunityLead__c</object>
+        <outputAssignments>
+            <assignToReference>Duplicado</assignToReference>
+            <field>Name</field>
+        </outputAssignments>
+    </recordLookups>
+    <start>
+        <locationX>50</locationX>
+        <locationY>50</locationY>
+        <connector>
+            <targetReference>GetDuplicated</targetReference>
+        </connector>
+        <object>OpportunityLead__c</object>
+        <recordTriggerType>Create</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Obsolete</status>
+    <variables>
+        <description>Valor duplicado</description>
+        <name>Duplicado</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>true</isOutput>
+        <value>
+            <stringValue>Null</stringValue>
+        </value>
+    </variables>
+</Flow>

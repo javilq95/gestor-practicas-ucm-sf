@@ -1,0 +1,457 @@
+<!--/**
+@description 
+<pre>
+Visual force to create -- Clase controladora para sacar información del anexo de contacto
+<br/>
+FECHA         AUTOR       DESCRIPCIÓN<br/>
+
+23/07/2021   Javier López Quesada
+
+</pre>
+@author Javier López Quesada
+@Date 24/07/2021
+*/-->
+<apex:page standardController="Contact" extensions="ContactControllerPDF" renderas="pdf" standardStylesheets="false" applyBodyTag="false" applyHtmlTag="false" showHeader="false" sidebar="false">
+    <html>
+        <head>
+            <title>Anexo de prácticas Alumno</title>
+            <style type="text/css"> 
+                @page:first{
+           		margin-top : 100px;
+                padding:0px;
+                margin-bottom:100px;
+                
+         			@top-center{
+             		content: element(headerFirst);
+                	width:115%;
+              		}
+                	@bottom-center {   
+                	content: element(footer);
+                	} 
+        		}
+       			div.headerFirst{
+           		position : running(headerFirst) ;
+                width: 100%;
+                }
+
+                @page {
+                margin-top: 115px;
+                padding:0px;
+                margin-bottom:100px;
+                
+                	@top-center{
+                	content: element(header);
+                	width:100%;
+                	}
+                
+                	@bottom-center {   
+                	content: element(footer);
+                	} 
+                }        
+                div.header{            
+                position: running(header);
+               	width: 100%;
+                }
+                
+                div.headersection1{
+                width:100%;
+                }
+                
+                div.footer {                    
+                position: running(footer);
+                width: 100%;
+                height:10%;
+                text-align: center;
+                border: solid #FFFFFF;
+                }
+                
+                .footerbold{
+                color:#000000;
+                font-weight: Bold;
+                font-size: 7pt;
+                }
+                
+                .footernormal{
+                color:#000000;
+                font-weight: normal;
+                font-size: 7pt;
+                }
+                
+                .blueFooter{
+                font-size: 8pt;
+                color:#66829c;
+                }
+
+                
+                .pagenumber:before {        
+                content: counter(page);
+                font-weight: bold;
+                font-size: 7pt;
+                }
+                
+                .pagecount:before {        
+                content: counter(pages);
+                font-weight: bold;
+                font-size: 7pt;
+                }
+                
+                .pagestyle{
+                font-weight: normal;
+                font-size: 7pt;
+                }
+                
+                p.breakpage{
+				page-break-after: always;
+				}
+                
+                .s4 {
+                color: black;
+                font-family: Helvetica, sans-serif;
+                font-style: normal;
+                font-weight: normal;
+                text-decoration: none;
+                font-size: 9pt;
+                }
+                .s1 {
+                color: #66829c;
+                font-family:Helvetica, sans-serif;
+                font-weight: bold;
+                text-align:center;
+                text-decoration: none;
+                font-size: 11pt;
+                }
+                .s1j {
+                color: #66829c;
+                font-family:Helvetica, sans-serif;
+                font-weight: bold;
+                text-align:justify;
+                text-decoration: none;
+                font-size: 11pt;
+                }
+                .s1indent {
+                color: #66829c;
+                font-family:Helvetica, sans-serif;
+                font-weight: bold;
+                text-decoration: none;
+                font-size: 10pt;
+                }
+                .s2{
+                color:Black;
+                font-family:Helvetica, sans-serif;
+                font-weight:normal;
+                font-size: 9pt;
+                }
+                .sb2{
+                color:color:#000000;
+                font-family:Helvetica, sans-serif;
+                font-weight: bold;
+                text-decoration: none;
+                font-size: 9pt;
+                }
+                .s2b{
+                font-family:Helvetica, sans-serif;
+                color:#000000;
+                font-weight: Bold;
+                text-indent:7pt;
+                font-size: 9pt;
+                }
+                .s2n{
+                font-family:Helvetica, sans-serif;
+                color:Black;
+                font-weight: normal;
+                text-indent:7pt;
+                font-size: 9pt;
+                }
+                .s3{
+                color: #66829c;
+                font-family:Helvetica, sans-serif;
+                font-weight: bold;
+                text-decoration: none;
+                font-size: 10pt;
+                }
+
+                
+                .colorbackground{
+                background-color: #66829c;
+                font-family:Helvetica, sans-serif;
+                color:white;
+                text-indent:7pt;
+                font-size: 10pt;
+                }
+                
+                .text-align_left{
+                text-align: left;
+                }
+                
+                .text-align_right{
+                text-align: right;
+                }
+                .text-align_center{
+                text-align: center;
+                }
+                .Italic{
+                color:#000000;
+                text-indent:pt;
+                font-size: 9pt;                
+                font-style: italic;
+                font-weight:normal;
+                }
+                 .ItalicHelve{
+                font-family:Helvetica, sans-serif;
+                color:#000000;
+                text-indent:pt;
+                font-size: 9pt;                
+                font-style: italic;
+                font-weight:normal;
+                }
+                .Italic-indent{
+                color:#000000;
+                text-indent:50pt;
+                font-size: 9pt;                
+                font-style: italic;
+                }
+                .Icono{
+                text-indent:65%;
+                }
+                .blueHeader1{
+                font-family:Helvetica, sans-serif;
+                font-size: 12pt;
+                border: 1px solid black;
+                text-align: center;
+                color:#66829c;
+                }
+                
+                .blueHeader2{
+                font-family:Helvetica, sans-serif;
+                font-size: 9pt;
+                font-weight: bold;
+                color:#66829c;
+                }
+                .Bold{
+                font-weight: Bold;
+                }
+                .hide{
+                    display:none;
+                }
+                
+            </style>
+            
+        </head>
+        <body>
+            <!--Footer -->
+            <div class="footer" >   
+                <div class="s4" style="text-align:center;" >
+                    <span class="pagestyle"> Página </span>
+                    <span class="pagenumber"/><span class="pagestyle"> de </span>
+                    <span class="pagecount"/>
+                </div>
+                <table width="100%">
+                    <tr>
+                        <td class="footerbold">Facultad de Informática</td>
+                        <td class="footerbold">Facultad de Ciencias de la Información</td>
+                        <td class="footerbold">Facultad de Medicina</td>
+                        <td class="footerbold">Facultad de Bellas Artes</td>
+                    </tr>
+                     <tr>
+                        <td class="footernormal">Calle del Prof. José García Santesmases, 9,</td>
+                        <td class="footernormal">Av. Complutense, 3,</td>
+                        <td class="footernormal">Plaza de Ramón y Cajal, s/n,</td>
+                        <td class="footernormal">C. Pintor el Greco, 2,</td>
+                    </tr>
+                     <tr>
+                        <td class="footernormal">28040 Madrid</td>
+                        <td class="footernormal">28040 Madrid</td>
+                        <td class="footernormal">28040 Madrid</td>
+                        <td class="footernormal">28040 Madrid</td>
+                    </tr>
+                </table>
+                <table width="100%">
+                    <tr>
+                        <td class="blueFooter" width="35%">UNIVERSIDAD COMPLUTENSE DE MADRID </td>
+                        <td class="blueFooter"><a><span class="blueFooter"><u>www.ucm.es</u></span></a></td>
+                        <td class="blueFooter">91 452 0400</td>
+                    </tr>
+                </table>
+            </div>
+            <!--IMG & HEADER-->
+            <div class="headerFirst">
+                <table width="100%" >
+                   <tbody>
+                       <tr>
+                     		<td class="s1j" style="text-indent:15pt;"><span>ANEXO DE PRÁCTICAS UNIVERSIDAD COMPLUTENSE DE MADRID</span></td>
+                           <td class="Icono">
+                                <span class="Icono"><img height="80" width="80" margin-right="4" alt="image" src="{!URLFOR($Resource.escudo)}"/></span></td>
+                    	</tr>
+                    </tbody>
+                </table>
+            </div>
+            <!--Pagina 1-->
+            <div id="section1" class="headersection1">
+               <tr>
+                    <td class="s2b" width="">ANEXO QUE SE INCORPORA AL CONVENIO DE COOPERACIÓN EDUCATIVA SUSCRITO ENTRE LA
+                                             UNIVERSIDAD COMPLUTENSE DE MADRID Y LA EMPRESA 
+                        					 <span class="s2b" style="text-transform:uppercase"><apex:outputText value=" {!AccountInfo.name}" /></span>
+                    					     PARA EL DESARROLLO DE PRÁCTICAS EXTERNAS CURRICULARES. DICHA FORMACIÓN PRÁCTICA
+                                             SE REALIZARÁ DE CONFORMIDAD CON LAS PREVISIONES CONTENIDAS EN EL REAL DECRETO
+                                             592/2014, DE 11 DE JULIO, POR EL QUE SE REGULAN LAS PRÁCTICAS ACADÉMICAS EXTERNAS DE
+                                             LOS ESTUDIANTES UNIVERSITARIOS.</td>
+                </tr>
+                <br/>
+                <tr>
+                    <td class="s2" width="">1. El/la Estudiante 
+                    <span class="s2b"><apex:outputText value=" {!name}" /></span>
+                    con DNI <span class="s2b"><apex:outputText value=" {!nif}" /></span>, realizará un periodo de prácticas con el cargo
+                    <span class="s2b"><apex:outputText value=" {!opportunityInfo.name}" /></span>        
+                    del <span class="s2b"><apex:outputText value=" {!opportunityInfo.StartDate__c}" /></span>    
+                    al <span class="s2b"><apex:outputText value=" {!opportunityInfo.EndDate__c}" /></span>
+                    con una duración de <span class="s2b"><apex:outputText value=" {!opportunityInfo.TotalTime__c}" /></span>
+                    horas a la semana, según contempla su plan de estudios. En caso de no formalizar
+                    la matrícula y/o no cumplir todos los requisitos exigibles, esta práctica quedará anulada de oficio.
+                        <br/><br/>
+                    2. Durante su estancia en la Empresa, el/la estudiante realizará tareas profesionales habituales de la
+                    unidad en que esté adscrito/a, no existiendo en ningún caso relación laboral entre las partes, ya que las
+                    prácticas externas tienen exclusivamente la consideración de formación académica.
+                        <br/><br/>
+                    3. El/la estudiante no podrá tener vinculación laboral con la empresa ni durante el desarrollo de la práctica
+                    ni en el año inmediatamente anterior al inicio de la misma. 
+                        <br/><br/>
+                    4. Asimismo, los objetivos educativos y competencias a desarrollar que forman parte del Proyecto
+                    Formativo de Prácticas de la titulación están disponibles en la web de la Universidad Complutense de Madrid
+                        <br/><br/>
+                    5. El estudiante tendrá derecho a disfrutar de los permisos necesarios para realizar exámenes u otras
+                    pruebas de evaluación, previa justificación de los mismos.
+                        <br/><br/>
+                    6. Una vez iniciada la práctica en la empresa y hasta que finalice su estancia en la misma, el/la estudiante
+                    no podrá incorporarse a otra empresa/entidad para realizar otra práctica, salvo por causas debidamente
+                    justificadas y documentadas.
+                        <br/><br/>
+                    7. La Empresa tiene derecho a rescindir este acuerdo inmediatamente si el/la estudiante, a juicio de la
+                    dirección, no cumple con dichas obligaciones, en cuyo caso deberá comunicarlo al tutor académico y a
+                    la unidad administrativa de prácticas externas.
+                        <br/><br/>
+                    8. Si durante la estancia en la empresa, el/la estudiante solicitara la expedición del título académico, deberá
+                    finalizar la práctica, comunicándolo inmediatamente a su tutor/a de empresa y a la unidad de prácticas.
+                        <br/><br/>
+                    9. El/la estudiante percibirá la cantidad de 
+                    <span class="s2b"><apex:outputText value=" {!opportunityInfo.amount}" /></span>
+                    euros mensuales/totales, en concepto de
+                    bolsa de ayuda, que será abonada directamente por la empresa y estará sujeta a la retención de IRPF
+                    que la legislación vigente establezca.</td>
+                </tr><br/>
+                <table>
+                <tr>
+                    <td>
+                        <small><i>Fdo. Alumno <b>{!name}</b></i></small> 
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <apex:outputField value="{!signatureContactInfo.signature__Signature__c}"/>
+                    </td>
+                </tr>
+                    <tr>
+                    <td>
+                        <small><i>Fdo. Empresa <b>{!AccountInfo.name}</b></i></small>  
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <apex:outputField value="{!signatureAccountInfo.signature__Signature__c}"/>
+                    </td>
+                </tr>
+                    
+                </table>
+            </div> 
+			<p class="breakpage" />
+            <!--IMG & HEADER-->
+            <div class="header">
+                <table width="100%" >
+                   <tbody>
+                       <tr>
+                     		<td class="s1j" style="text-indent:15pt;"><span>ANEXO DE PRÁCTICAS UNIVERSIDAD COMPLUTENSE DE MADRID</span></td>
+                           <td class="Icono">
+                                <span class="Icono"><img height="80" width="80" margin-right="4" alt="image" src="{!URLFOR($Resource.escudo)}"/></span></td>
+                    	</tr>
+                    </tbody>
+                </table>
+            </div>
+			 <!--Pagina 2-->
+            <div id="section2" class="headersection1">
+                <tr>
+                    <td class="s2b" width="">ANEXO QUE SE INCORPORA AL CONVENIO DE COOPERACIÓN EDUCATIVA SUSCRITO ENTRE LA
+                                             UNIVERSIDAD COMPLUTENSE DE MADRID Y LA EMPRESA 
+                        					 <span class="s2b" style="text-transform:uppercase"><apex:outputText value=" {!AccountInfo.name}" /></span>
+                    					     PARA EL DESARROLLO DE PRÁCTICAS EXTERNAS CURRICULARES. DICHA FORMACIÓN PRÁCTICA
+                                             SE REALIZARÁ DE CONFORMIDAD CON LAS PREVISIONES CONTENIDAS EN EL REAL DECRETO
+                                             592/2014, DE 11 DE JULIO, POR EL QUE SE REGULAN LAS PRÁCTICAS ACADÉMICAS EXTERNAS DE
+                                             LOS ESTUDIANTES UNIVERSITARIOS.</td>
+                </tr>
+                <br/>
+                <tr>
+                    <td class="s2" width="">1. El/la Estudiante 
+                    <span class="s2b"><apex:outputText value=" {!name}" /></span>
+                    con DNI <span class="s2b"><apex:outputText value=" {!nif}" /></span>, realizará un periodo de prácticas con el cargo
+                    <span class="s2b"><apex:outputText value=" {!opportunityInfo.name}" /></span>        
+                    del <span class="s2b"><apex:outputText value=" {!opportunityInfo.StartDate__c}" /></span>    
+                    al <span class="s2b"><apex:outputText value=" {!opportunityInfo.EndDate__c}" /></span>
+                    con una duración de <span class="s2b"><apex:outputText value=" {!opportunityInfo.TotalTime__c}" /></span>
+                    horas a la semana, según contempla su plan de estudios. En caso de no formalizar
+                    la matrícula y/o no cumplir todos los requisitos exigibles, esta práctica quedará anulada de oficio.
+                        <br/><br/>
+                    2. Durante su estancia en la Empresa, el/la estudiante realizará tareas profesionales habituales de la
+                    unidad en que esté adscrito/a, no existiendo en ningún caso relación laboral entre las partes, ya que las
+                    prácticas externas tienen exclusivamente la consideración de formación académica.
+                        <br/><br/>
+                    3. El/la estudiante no podrá tener vinculación laboral con la empresa ni durante el desarrollo de la práctica
+                    ni en el año inmediatamente anterior al inicio de la misma. 
+                        <br/><br/>
+                    4. Asimismo, los objetivos educativos y competencias a desarrollar que forman parte del Proyecto
+                    Formativo de Prácticas de la titulación están disponibles en la web de la Universidad Complutense de Madrid
+                        <br/><br/>
+                    5. El estudiante tendrá derecho a disfrutar de los permisos necesarios para realizar exámenes u otras
+                    pruebas de evaluación, previa justificación de los mismos.
+                        <br/><br/>
+                    6. Una vez iniciada la práctica en la empresa y hasta que finalice su estancia en la misma, el/la estudiante
+                    no podrá incorporarse a otra empresa/entidad para realizar otra práctica, salvo por causas debidamente
+                    justificadas y documentadas.
+                        <br/><br/>
+                    7. La Empresa tiene derecho a rescindir este acuerdo inmediatamente si el/la estudiante, a juicio de la
+                    dirección, no cumple con dichas obligaciones, en cuyo caso deberá comunicarlo al tutor académico y a
+                    la unidad administrativa de prácticas externas.
+                        <br/><br/>
+                    8. Si durante la estancia en la empresa, el/la estudiante solicitara la expedición del título académico, deberá
+                    finalizar la práctica, comunicándolo inmediatamente a su tutor/a de empresa y a la unidad de prácticas.
+                        <br/><br/>
+                    9. El/la estudiante percibirá la cantidad de 
+                    <span class="s2b"><apex:outputText value=" {!opportunityInfo.amount}" /></span>
+                    euros mensuales/totales, en concepto de
+                    bolsa de ayuda, que será abonada directamente por la empresa y estará sujeta a la retención de IRPF
+                    que la legislación vigente establezca.</td>
+                </tr><br/>
+                <table>
+                <tr>
+                    <td>
+                        <small><i>Fdo. Alumno <b>{!name}</b></i></small> 
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <apex:outputField value="{!signatureContactInfo.signature__Signature__c}"/>
+                    </td>
+                </tr>
+                    <tr>
+                    <td>
+                        <small><i>Fdo. Empresa <b>{!AccountInfo.name}</b></i></small>  
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <apex:outputField value="{!signatureAccountInfo.signature__Signature__c}"/>
+                    </td>
+                </tr>
+                    
+                </table>
+            </div>
+   	 </body>
+    </html>
+</apex:page>

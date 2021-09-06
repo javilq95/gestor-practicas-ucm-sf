@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ApexComponent xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>52.0</apiVersion>
+    <description>Componente del pie de sitio predeterminado de Plataforma Lightning</description>
+    <label>SiteFooter</label>
+    <packageVersions>
+        <majorNumber>3</majorNumber>
+        <minorNumber>3</minorNumber>
+        <namespace>CMTD</namespace>
+    </packageVersions>
+    <packageVersions>
+        <majorNumber>4</majorNumber>
+        <minorNumber>3</minorNumber>
+        <namespace>signature</namespace>
+    </packageVersions>
+</ApexComponent>

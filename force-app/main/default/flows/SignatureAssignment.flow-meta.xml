@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>52.0</apiVersion>
+    <decisions>
+        <description>Comprueba si la firma tiene un contacto asociado</description>
+        <name>RelatedContact</name>
+        <label>Contacto Vinculado</label>
+        <locationX>168</locationX>
+        <locationY>350</locationY>
+        <defaultConnectorLabel>Resultado predeterminado</defaultConnectorLabel>
+        <rules>
+            <name>hasContact</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.signature__Contact__c</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>SignContact</targetReference>
+            </connector>
+            <label>tieneContacto</label>
+        </rules>
+        <rules>
+            <name>hasCompany</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.signature__Company__c</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>SignAccount</targetReference>
+            </connector>
+            <label>tieneCompany</label>
+        </rules>
+    </decisions>
+    <description>Asignación de firma automática a becarios y empresas tras usar la ficha de firma</description>
+    <interviewLabel>Asignación de Firmas {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Asignación de Firmas</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>FREE_FORM_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordUpdates>
+        <description>Firma de la empresa</description>
+        <name>SignAccount</name>
+        <label>Firma Empresa</label>
+        <locationX>447</locationX>
+        <locationY>420</locationY>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Name</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.signature__Company__c</elementReference>
+            </value>
+        </filters>
+        <inputAssignments>
+            <field>Signature__c</field>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputAssignments>
+        <object>Account</object>
+    </recordUpdates>
+    <recordUpdates>
+        <description>Actualiza la firma del contacto</description>
+        <name>SignContact</name>
+        <label>Firma Becario</label>
+        <locationX>444</locationX>
+        <locationY>270</locationY>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>$Record.signature__Contact__c</elementReference>
+            </value>
+        </filters>
+        <inputAssignments>
+            <field>Signature__c</field>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputAssignments>
+        <object>Contact</object>
+    </recordUpdates>
+    <start>
+        <locationX>50</locationX>
+        <locationY>50</locationY>
+        <connector>
+            <targetReference>RelatedContact</targetReference>
+        </connector>
+        <object>signature__Signature__c</object>
+        <recordTriggerType>CreateAndUpdate</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+</Flow>

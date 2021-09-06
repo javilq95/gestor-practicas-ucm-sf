@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <description>Envía un correo de bienvenida a los nuevos candidatos</description>
+        <name>WelcomeAlertLead</name>
+        <label>Alerta Bienvenida Alumno</label>
+        <locationX>574</locationX>
+        <locationY>133</locationY>
+        <actionName>Lead.AlertaBienvenidaAlumno</actionName>
+        <actionType>emailAlert</actionType>
+        <connector>
+            <targetReference>CreateAlertTask</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>SObjectRowId</name>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <apiVersion>52.0</apiVersion>
+    <description>Correo de bienvenida que se lanza cuando un alumno se registra</description>
+    <formulas>
+        <description>Fecha en la que finaliza la tarea</description>
+        <name>DueDate</name>
+        <dataType>Date</dataType>
+        <expression>TODAY() + 3</expression>
+    </formulas>
+    <formulas>
+        <description>Fecha en la que saltará el recordatorio de la tarea</description>
+        <name>ReminderDate</name>
+        <dataType>DateTime</dataType>
+        <expression>NOW() + 1</expression>
+    </formulas>
+    <formulas>
+        <description>Asunto de la tarea</description>
+        <name>SubjectTask</name>
+        <dataType>String</dataType>
+        <expression>&quot;Recordatorio: Revisar datos de &quot; + {!$Record.FirstName} + &quot; &quot; + {!$Record.LastName}</expression>
+    </formulas>
+    <interviewLabel>Correo Bienvenida Candidatos {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Correo Bienvenida Candidato</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>FREE_FORM_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordCreates>
+        <description>Cuando un lead es creado, se crea una tarea de alerta (para revisar datos del lead) que notifica al gestor de prácticas 24 horas después de su creación.</description>
+        <name>CreateAlertTask</name>
+        <label>Crear Tarea Alerta</label>
+        <locationX>760</locationX>
+        <locationY>132</locationY>
+        <inputAssignments>
+            <field>ActivityDate</field>
+            <value>
+                <elementReference>DueDate</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>IsReminderSet</field>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>OwnerId</field>
+            <value>
+                <elementReference>$Record.OwnerId</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Priority</field>
+            <value>
+                <stringValue>Normal</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>ReminderDateTime</field>
+            <value>
+                <elementReference>ReminderDate</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Status</field>
+            <value>
+                <stringValue>In Progress</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Subject</field>
+            <value>
+                <elementReference>SubjectTask</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>WhoId</field>
+            <value>
+                <elementReference>$Record.Id</elementReference>
+            </value>
+        </inputAssignments>
+        <object>Task</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordCreates>
+    <start>
+        <locationX>49</locationX>
+        <locationY>50</locationY>
+        <connector>
+            <targetReference>WelcomeAlertLead</targetReference>
+        </connector>
+        <object>Lead</object>
+        <recordTriggerType>Create</recordTriggerType>
+        <triggerType>RecordAfterSave</triggerType>
+    </start>
+    <status>Active</status>
+</Flow>
